@@ -24,27 +24,41 @@
 
 set -e
 
+echo "Configuring Veins..."
 (cd veins && ./configure "$@")
-{%- if cookiecutter.use_inet == "yes" %}
-(cd inet && make makefiles)
-(cd veins/subprojects/veins_inet && ./configure "$@")
-{%- endif %}
-{%- if cookiecutter.use_inet3 == "yes" %}
-(cd inet && make makefiles)
-(cd veins/subprojects/veins_inet3 && ./configure "$@")
-{%- endif %}
-{%- if cookiecutter.use_veins_vlc == "yes" %}
-(cd veins_vlc && ./configure "$@")
-{%- endif %}
-{%- if cookiecutter.use_plexe == "yes" %}
-(cd plexe && ./configure --with-veins=../veins "$@")
-{%- endif %}
-{%- if cookiecutter.use_simulte == "yes" %}
-(cd simulte && make makefiles)
-{%- endif %}
-{%- if cookiecutter.use_simu5g == "yes" %}
-(cd simu5g && make makefiles)
-{%- endif %}
+echo ""
 
-(cd {{ cookiecutter.project_name_as_file_name }} && ./configure "$@")
+echo "Configuring Plexe..."
+(cd plexe && ./configure --with-veins=../veins "$@")
+echo ""
+
+{%- if cookiecutter.use_hetnet == "yes" %}
+echo "Configuring INET..."
+(cd inet && make makefiles)
+echo ""
+
+echo "Configuring Veins INET..."
+(cd veins/subprojects/veins_inet && ./configure "$@")
+echo ""
+
+echo "Configuring Veins VLC..."
+(cd veins_vlc && ./configure "$@")
+echo ""
+
+echo "Configuring SimuLTE..."
+(cd simulte && make makefiles)
+echo ""
+
+echo "Configuring Plexe VLC..."
+(cd plexe/subprojects/plexe_vlc && ./configure "$@")
+echo ""
+
+echo "Configuring Plexe LTE..."
+(cd plexe/subprojects/plexe_lte && ./configure "$@")
+echo ""
+
+echo "Configuring Plexe HetNet..."
+(cd plexe/subprojects/plexe_hetnet && ./configure "$@")
+echo ""
+{%- endif %}
 

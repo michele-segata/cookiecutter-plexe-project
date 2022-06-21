@@ -23,5 +23,6 @@
 #
 
 cd "veins" && . ./setenv; cd - > /dev/null
+cd "plexe" && . ./setenv; cd - > /dev/null
 cd "{{ cookiecutter.project_name_as_file_name }}" && . ./setenv; cd - > /dev/null
 

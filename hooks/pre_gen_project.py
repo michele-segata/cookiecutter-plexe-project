@@ -21,40 +21,49 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-import re
 import subprocess
 import sys
+from re import search, match
+from subprocess import run, PIPE
+
+
+def get_omnet_version():
+    major = 0
+    try:
+        result = run(['opp_run', '-v'], stdout=PIPE)
+        if not result.returncode == 0:
+            err("Cannot check for OMNeT++ version. Is opp_run in your PATH?")
+            exit(1)
+        version = search("Version: (.*?),", result.stdout.decode())
+        if version:
+            version_string = version.group(1)
+            version_parts = version_string.split(".")
+            major = int(version_parts[0])
+    except FileNotFoundError:
+        err("Cannot check for OMNeT++ version. Is opp_run in your PATH?")
+        exit(1)
+    return major
+
 
 project_name_as_file_name = '{{ cookiecutter.project_name_as_file_name }}'
 project_name_as_macro_name = '{{ cookiecutter.project_name_as_macro_name }}'
-use_inet = '{{ cookiecutter.use_inet }}'
-use_inet3 = '{{ cookiecutter.use_inet3 }}'
-use_simulte = '{{ cookiecutter.use_simulte }}'
-use_simu5g = '{{ cookiecutter.use_simu5g }}'
+use_hetnet = '{{ cookiecutter.use_hetnet }}'
 
 print('Cookiecutter checks starting.')
 
 print('Making sure we can run git')
 subprocess.check_call(['git', '--version'])
 
-if not re.match(r'^[a-z0-9_]+$', project_name_as_file_name):
+if not match(r'^[a-z0-9_]+$', project_name_as_file_name):
     print('ERROR: project_name_as_file_name "%s" does not solely consist of characters a-z, 0-9, and underscore.' % project_name_as_file_name)
     sys.exit(1)
 
-if not re.match(r'^[A-Z0-9_]+$', project_name_as_macro_name):
+if not match(r'^[A-Z0-9_]+$', project_name_as_macro_name):
     print('ERROR: project_name_as_macro_name "%s" does not solely consist of characters A-Z, 0-9, and underscore.' % project_name_as_macro_name)
     sys.exit(1)
 
-if use_inet == "yes" and use_inet3 == "yes":
-    print('ERROR: use_inet and use_inet3 cannot both be "yes" (these two versions of the INET framework cannot coexist).')
-    sys.exit(1)
-
-if use_simulte == "yes" and use_inet == "no":
-    print('ERROR: use_simulte requires use_inet (SimuLTE requires INET version 4).')
-    sys.exit(1)
-
-if use_simu5g == "yes" and use_inet == "no":
-    print('ERROR: use_simu5g requires use_inet (SIMU5G requires INET version 4).')
+if use_hetnet == "yes" and get_omnet_version() >= 6:
+    print('ERROR: OMNeT++ version 6 is not supported by some of the frameworks required for Plexe with heterogenous interfaces. Please use OMNeT++ version 5.7.')
     sys.exit(1)
 
 print('Cookiecutter checks successful.')

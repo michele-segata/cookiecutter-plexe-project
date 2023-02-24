@@ -1,6 +1,6 @@
 # cookiecutter-veins-project #
 
-Cookiecutter project template for quickly setting up a simulation model library using Veins.
+Cookiecutter project template for quickly setting up a simulation model library using Plexe.
 
 ## Supported Program Versions ##
 
@@ -9,75 +9,46 @@ Cookiecutter project template for quickly setting up a simulation model library 
 
 ## Running ##
 
-Save the contents of this repository to disk, e.g., in `~/src/cookiecutter-veins-project` (that is, this file resides in `~/src/cookiecutter-veins-project/README.md`).
+Save the contents of this repository to disk, e.g., in `~/src/cookiecutter-plexe-project` (that is, this file resides in `~/src/cookiecutter-plexe-project/README.md`).
 
 Open a terminal and switch to a directory that should contain your new project, e.g., `~/src`.
 
-Run cookiecutter, e.g., as `cookiecutter ~/src/cookiecutter-veins-project`.
+Run cookiecutter, e.g., as `cookiecutter ~/src/cookiecutter-plexe-project`.
 You will be prompted for a number of configuration variables (each with a default value, which you can accept by pressing the `enter` key).
 After finishing, cookiecutter will have created a directory named after your `project_name_as_file_name` directory.
 
-## Example ##
+## Detailed procedure ##
 
+First install cookiecutter for python via `pip`
 ```
-% cd ~/src
-% cookiecutter ~/src/cookiecutter-veins-project
-project_name [Veins Proj]:
-project_brief [Sample combination of Veins and a custom project]:
-project_name_as_file_name [veins_proj]:
-project_name_as_macro_name [VEINS_PROJ]:
-Select use_inet:
-1 - no
-2 - yes
-Choose from 1, 2 (1, 2) [1]:
-Select use_inet3:
-1 - no
-2 - yes
-Choose from 1, 2 (1, 2) [1]:
-Select use_veins_vlc:
-1 - no
-2 - yes
-Choose from 1, 2 (1, 2) [1]:
-Select use_plexe:
-1 - no
-2 - yes
-Choose from 1, 2 (1, 2) [1]:
-Select use_simulte:
-1 - no
-2 - yes
-Choose from 1, 2 (1, 2) [1]:
-Cookiecutter checks starting.
-Making sure we can run git
-git version 2.23.0
-Cookiecutter checks successful.
-Cookiecutter successful. Running git commands to set up repository.
-[...]
-From https://github.com/sommer/veins
- * tag               veins-5.2  -> FETCH_HEAD
-Added dir 'veins'
-Repository set up successful. Running git commands to clean up.
-Cookiecutter successful.
-
-% cd ~/src/veins_proj
-% ls *
-Makefile  configure
-
-veins:
-COPYING             doc                 images              sumo-launchd.py
-Makefile            doxy.cfg            print-veins-version
-README.txt          examples            src
-configure           format-code.sh      subprojects
-
-veins_proj:
-COPYING                  doc                      images
-Makefile                 doxy.cfg                 print-veins_proj-version
-README.md                examples                 src
-configure                format-code.sh
+pip install --user cookiecutter
+```
+Then download the `cookiecutter-plexe-project` via `git`
+```
+cd ~/src
+git clone https://github.com/michele-segata/cookiecutter-plexe-project.git
+```
+and automatically download all the required source code by running
+```
+cd ~/src
+cookiecutter -v cookiecutter-plexe-project
+```
+Cookiecutter will prompt about some basic information, such as project name, project download folder, etc.
+You can simply leave all the default values besides the last one.
+The first prompt will ask you whether you want to use the heterogeneous networking extension or not (`use_hetnet`).
+If you type no, then standard Plexe (802.11p only) will be downloaded, otherwise cookiecutter will take care of downloading all the required extensions.
+**Be aware that the HetNet version is not compatible with OMNeT++ 6** but only with 5.7.
+If will find all the required software under the `plexe_proj` folder and every framework (Veins, Plexe, INET, etc.) will be located in a subfolder.
+To build all the software simply type
+```
+cd ~/src/plexe_proj
+./configure
+make
 ```
 
 ## More Information ##
 
-See the Veins website <http://veins.car2x.org/> for a tutorial, documentation,
+See the Plexe website <http://plexe.car2x.org/> for a tutorial, documentation,
 and publications.
 
 ## License ##
